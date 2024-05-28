@@ -1,3 +1,4 @@
+import random
 from random import randint
 
 def Prog(m, x, p1, pc):
@@ -197,21 +198,21 @@ def jogo(time_casa, time_fora):
     gol = gol_fora = cartao_amarelo_casa = cartao_amarelo_fora = cartao_vermelho_casa = cartao_vermelho_fora = penalti = 0
 
     tier1 = [
-        'Flamengo',  # Brasil
-        'Palmeiras',  # Brasil
+        'FLAMENGO',  # Brasil
+        'PALMEIRAS',  # Brasil
         'River Plate',  # Argentina
-        'Atletico Mineiro',  # Brasil
+        'ATLETICO MINEIRO',  # Brasil
         'Nacional',  # Uruguai
         'Peñarol'  # Uruguai
     ]
     tier2 = [
-        'Corinthans',  # Brasil
-        'Fluminense',  # Brasil
+        'CORINTHANS',  # Brasil
+        'FLUMINENSE',  # Brasil
         'Boca Juniors',  # Argentina
         'Independiente',  # Argentina
         'Estudiantes',  # Argentina
-        'Athletico Paranaense',  # Brasil
-        'Gremio',  # Brasil
+        'ATHLETICO PARANAENSE',  # Brasil
+        'GREMIO',  # Brasil
         'Internacional',  # Brasil
         'Sao Paulo',  # Brasil
         'San Lorenzo',  # Argentina
@@ -235,11 +236,11 @@ def jogo(time_casa, time_fora):
     ]
     tier3 = [
         'Racing',  # Argentina
-        'Cruzeiro',  # Brasil
+        'CRUZEIRO',  # Brasil
         'Redbull Bragantino',  # Brasil
         'Botafogo',  # Brasil
         'Vasco',  # Brasil
-        'Santos',  # Brasil
+        'SANTOS',  # Brasil
         'America Mineiro',  # Brasil
         'Bahia',  # Brasil
         'Atlético Nacional',  # Colômbia
@@ -333,4 +334,16 @@ def jogo(time_casa, time_fora):
     elif penalti > 498:
         return 'penalti_fora'
 
+def time_counter(count,speed,minutos):
 
+    if count % speed == 0:
+        minutos += 1
+
+
+    return minutos
+
+def extra_time():
+    lista = [1,1,1,1,1,2,2,2,2,3,3,3,3,4,4,4,5,5,6]
+    time = random.choice(lista)
+
+    return t
