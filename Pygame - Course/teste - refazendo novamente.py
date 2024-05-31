@@ -1,5 +1,6 @@
 import pygame
 import sys
+from random import randint
 
 pygame.init()
 
@@ -33,7 +34,15 @@ player_rect = player_surf.get_rect(midbottom=(50,300))
 #Player Stand
 player_stand_surf = pygame.image.load('Images/Player/player_stand.png').convert_alpha()
 player_stand_surf = pygame.transform.rotozoom(player_stand_surf,0,2)
-player_stand_surf_rect = player_stand_surf.get_rect(center=(400,130))
+player_stand_surf_rect = player_stand_surf.get_rect(center=(400,190))
+
+#Initial Screen
+start_text = font.render('Press Space to start',False,(111,196,169))
+start_text_rect = start_text.get_rect(center=(400,320))
+game_name_text= font.render('Pixel Runner',False,(111,196,169))
+game_name_rect = game_name_text.get_rect(center = (400,60))
+
+
 
 #Player Jump
 gravity = 0
@@ -45,6 +54,30 @@ game_running = False
 game_time = 0
 
 #Sistema de pontos
+score = 0
+
+#Enemy Spawn
+
+#Enemy List
+enemy_list = []
+
+#Enemy Timer
+obastacle_timer = pygame.USEREVENT + 1
+pygame.time.set_timer(obastacle_timer,900)
+
+
+def move_enemy(enemy_list):
+    if enemy_list:
+        for rect in enemy_list:
+            rect.x -= randint(2,7)
+            screen.blit(snail_surf,rect)
+        return enemy_list
+    else:
+        return []
+
+
+
+
 
 def score_display():
     game_score = int(pygame.time.get_ticks() /1000) - game_time
@@ -54,49 +87,8 @@ def score_display():
     return game_score
 
 
-def save_scores(score):
-    points =str(score)
-    with open('save_score.txt', 'a+') as file:
-        file.write(points + '\n')
-        file.close()
-
-def append_scores():
-    top_scores = list()
-    with open('save_score.txt', 'r+') as file:
-        line = file.readlines()
-        for item in line:
-            item.replace('\n','')
-            top_scores.append(item)
-
-    return top_scores
 
 
-def read_scores(top_scores):
-    lista_final = list()
-    for score in top_scores:
-        new_score = score.replace('\n','')
-        lista_final.append(new_score)
-    return lista_final
-
-
-def ranking_pontos():
-    top_scores = append_scores()
-    scores_list = read_scores(top_scores)
-    lista_ordem = sorted(scores_list,reverse=True)
-    pos = {'primeiro':(600,100),'segundo':(600,150),'terceiro':(600,200)}
-    for count, score in enumerate(lista_ordem):
-        if count == 0:
-            score_text_surf = font.render(f'{count +1} place:  {score} points', False, (45,43,23))
-            score_text_rect = score_text_surf.get_rect(center=(pos['primeiro']))
-            screen.blit(score_text_surf,score_text_rect)
-        if count == 1:
-            score_text_surf = font.render(f'{count + 1} place:  {score} points', False, (45, 43, 23))
-            score_text_rect = score_text_surf.get_rect(center=(pos['segundo']))
-            screen.blit(score_text_surf, score_text_rect)
-        if count == 2:
-            score_text_surf = font.render(f'{count + 1} place:  {score} points', False, (45, 43, 23))
-            score_text_rect = score_text_surf.get_rect(center=(pos['terceiro']))
-            screen.blit(score_text_surf, score_text_rect)
 
 
 
@@ -112,11 +104,25 @@ while True:
 
     for event in pygame.event.get():
 
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+
         if game_running:
 
             if event.type == pygame.KEYDOWN and player_rect.bottom == 300:
                 if event.key == pygame.K_SPACE:
                     gravity = -20
+
+            if event.type == obastacle_timer:
+                enemy_list.append(snail_surf.get_rect(bottomright=(randint(900,1200),300)))
+
+
+
+
+
+
+
 
         else:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
@@ -125,9 +131,7 @@ while True:
                 game_time = int(pygame.time.get_ticks()/1000)
                 game_running = True
 
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            sys.exit()
+
 
 
 
@@ -144,12 +148,11 @@ while True:
         #Score display
         score = score_display()
 
-
         #Snail
-        screen.blit(snail_surf,snail_rect)
-        snail_rect.x -= 5
-        if snail_rect.right <= 0:
-            snail_rect.left = 900
+        #screen.blit(snail_surf,snail_rect)
+        #snail_rect.x -= 10
+        #if snail_rect.right <= 0:
+        #    snail_rect.left = 900
 
         #Player
         gravity += 1
@@ -160,26 +163,29 @@ while True:
 
         #Colide Player x Snail
         if player_rect.colliderect(snail_rect):
-            save_scores(score)
             game_running = False
+        enemy_list = move_enemy(enemy_list)
+
+
+
 
     else:
         screen.fill((98,124,163))
         screen.blit(player_stand_surf,player_stand_surf_rect)
 
 
-        #Continue text:
-        continue_text = font.render('Press Space to continue',False,(64,64,64))
-        continue_text_rect = continue_text.get_rect(center=(400,250))
-        screen.blit(continue_text,continue_text_rect)
 
-        #Exit text:
-        end_text = font.render('Exit',False,(150,50,20))
-        end_text_rect = end_text.get_rect(center=(400,300))
-        screen.blit(end_text,end_text_rect)
+
 
         #Score display
-        ranking_pontos()
+        game_score_text = font.render(f'Game Score: {score}', False, (111, 196, 169))
+        game_score_rect = game_score_text.get_rect(center=(400, 350))
+        screen.blit(game_name_text, game_name_rect)
+        if score > 0:
+            screen.blit(game_score_text,game_score_rect)
+        else:
+            # Continue text:
+            screen.blit(start_text, start_text_rect)
 
 
 

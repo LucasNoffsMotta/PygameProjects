@@ -73,6 +73,7 @@ snail_speed = 5
 
 
 while run:
+    display_score()
 
     #Loop para checar os eventos de input:
     for event in pygame.event.get():
@@ -89,7 +90,7 @@ while run:
 
         else:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-                game_time = pygame.time.get_ticks()
+                game_time = int(pygame.time.get_ticks() / 1000)
                 snail_rect.right = 800
                 game_state = True
 
