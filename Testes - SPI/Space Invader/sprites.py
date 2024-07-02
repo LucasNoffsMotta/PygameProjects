@@ -1,13 +1,15 @@
 import pygame as py
 from random import randint, choice
 from methods import *
-
+from moving_AI import *
 import pygame.key
+
+
 py.init()
 
 #Position reference for different sprites
 start_position = [540,750]  #Reference to: Player center position, shoots center position (shoots_pos = start_position[1] -10)
-boss_position = [540,50]
+#boss_position = [540,50]
 
 
 #Player Sprites
@@ -131,20 +133,19 @@ class Player(py.sprite.Sprite):
         self.rect.height = 40
         self.rect.width = 100
 
-
 #Shoot Sprites -Left Side
 class Shoots_left(py.sprite.Sprite):
     def __init__(self):
         super().__init__()
         self.image=py.Surface((4, 17))
         self.image.fill('white')
-        self.rect=self.image.get_rect(center=(start_position[0] +30,start_position[1] -10))
+        self.rect=self.image.get_rect(center=(start_position[0] +30, start_position[1] -5 ))
 
     def shoot_move(self):
         self.rect.y -= 10
 
     def shoot_kill(self):
-        if self.rect.y < -100:
+        if self.rect.midbottom[0] < 0:
             self.kill()
 
     def update(self):
@@ -157,14 +158,14 @@ class Shoots_right(py.sprite.Sprite):
         super().__init__()
         self.image=py.Surface((4, 17))
         self.image.fill('white')
-        self.rect = self.image.get_rect(center=(start_position[0] + 110,start_position[1] - 10))
+        self.rect = self.image.get_rect(center=(start_position[0] + 110,start_position[1] - 5))
 
 
     def shoot_move(self):
         self.rect.y -= 10
 
     def shoot_kill(self):
-        if self.rect.y < -100:
+        if self.rect.midbottom[0] < 0:
             self.kill()
 
     def update(self):
@@ -253,7 +254,7 @@ class Asteroid_Explosion(py.sprite.Sprite):
         self.animation()
 
 class Boss(py.sprite.Sprite):
-    def __init__(self,x2_pos):
+    def __init__(self,player_rect):
         super().__init__()
 
         #Still frames
@@ -261,33 +262,22 @@ class Boss(py.sprite.Sprite):
         frame2 = py.image.load('Images/Spaceship/Enemy Ship/enemy_stand 2.png').convert_alpha()
         self.list_still = [frame1,frame2]
 
-
-
         #Shooting Frames
-        shoot_frame0 = py.image.load('Images/Spaceship/Enemy Ship/enemy_shooting/enemy_shoot_sprite00.png').convert_alpha()
-        shoot_frame1 = py.image.load('Images/Spaceship/Enemy Ship/enemy_shooting/enemy_shoot_sprite01.png').convert_alpha()
-        shoot_frame2 = py.image.load('Images/Spaceship/Enemy Ship/enemy_shooting/enemy_shoot_sprite02.png').convert_alpha()
-        shoot_frame3 = py.image.load('Images/Spaceship/Enemy Ship/enemy_shooting/enemy_shoot_sprite03.png').convert_alpha()
-        shoot_frame4 =py.image.load('Images/Spaceship/Enemy Ship/enemy_shooting/enemy_shoot_sprite04.png').convert_alpha()
-        shoot_frame5 =py.image.load('Images/Spaceship/Enemy Ship/enemy_shooting/enemy_shoot_sprite05.png').convert_alpha()
-        shoot_frame6 =py.image.load('Images/Spaceship/Enemy Ship/enemy_shooting/enemy_shoot_sprite06.png').convert_alpha()
-        shoot_frame7 =py.image.load('Images/Spaceship/Enemy Ship/enemy_shooting/enemy_shoot_sprite07.png').convert_alpha()
-        shoot_frame8 = py.image.load('Images/Spaceship/Enemy Ship/enemy_shooting/enemy_shoot_sprite08.png').convert_alpha()
-        shoot_frame9 =py.image.load('Images/Spaceship/Enemy Ship/enemy_shooting/enemy_shoot_sprite09.png').convert_alpha()
-        shoot_frame10 =py.image.load('Images/Spaceship/Enemy Ship/enemy_shooting/enemy_shoot_sprite10.png').convert_alpha()
-        shoot_frame11 =py.image.load('Images/Spaceship/Enemy Ship/enemy_shooting/enemy_shoot_sprite11.png').convert_alpha()
-        shoot_frame12 = py.image.load('Images/Spaceship/Enemy Ship/enemy_shooting/enemy_shoot_sprite12.png').convert_alpha()
+        self.shoot_list = []
 
-        self.shoot_list = [shoot_frame1,shoot_frame2,shoot_frame3,shoot_frame4,
-                      shoot_frame5,shoot_frame6,shoot_frame7,shoot_frame8,shoot_frame9,
-                      shoot_frame10,shoot_frame11,shoot_frame12]
+        for i in range(12):
+            self.shoot_list.append(py.image.load(f'Images/Spaceship/Enemy Ship/enemy_shooting/enemy_shoot_sprite{i:02}.png').convert_alpha())
 
         self.frame_index = 0
         self.image = self.list_still[self.frame_index]
-        self.rect = self.image.get_rect(center=(500,-100))
-        self.enter_speed = 3
-        self.moving_speed = 5
-        self.x2_pos = x2_pos
+        self.rect = self.image.get_rect(center=(500,-200))
+        self.enter_speed = 5
+        self.time_count = 0
+        self.timer_add = 1
+        self.times_apeared = 0
+        self.shoot_time = 0
+        self.player_rect = player_rect
+        self.ai_moves = AIMoves(self.rect, 800, 500,self.player_rect)
 
 
     def sprite_animation(self):
@@ -306,19 +296,33 @@ class Boss(py.sprite.Sprite):
 
     def boss_enter(self):
         if self.rect.y <= 200:
-           self.rect.y += self.enter_speed
+            self.rect.y += self.enter_speed
 
-    def new_pos(self):
-        if self.rect.centerx > self.x2_pos:
-            self.rect.centerx -= 1
-        if self.rect.centerx < self.x2_pos:
-            self.x2_pos += 1
+
+    def boss_back(self):
+        self.rect.y -= 5
+
+    #Counts the boss time on screen // It goes back after 4 seconds
+    def boss_screen_time_control(self):
+        if self.timer_add == 1 and self.time_count < 240:
+            self.boss_enter()
+        if self.rect.y >= 200:
+            self.time_count += self.timer_add
+        if self.time_count >= 240:
+            self.boss_back()
+        if self.rect.y <= -1000:
+            self.timer_add = 0
+            self.time_count = 0
+        if self.timer_add == 0:
+            self.timer_add = 1
 
     def update(self):
+        self.shoot_time += 0.2
         self.sprite_animation()
-        self.boss_enter()
-        self.new_pos()
-       # self.boss_move()
+        self.boss_screen_time_control()
+        self.ai_moves.update()
+
+
 
 class Boss_Shoots(py.sprite.Sprite):
 
@@ -327,10 +331,10 @@ class Boss_Shoots(py.sprite.Sprite):
         self.image = py.Surface((4, 17))
         self.image.fill((214,252,255))
         self.rect = self.image.get_rect(center=rect_pos)
-        self.moving_speed = 5
+
 
     def shoot_move(self):
-        self.rect.y += 5
+        self.rect.y += 7
     def shoot_kill(self):
         if self.rect.y > 1000:
             self.kill()
@@ -402,6 +406,18 @@ class Shield(py.sprite.Sprite):
     def update(self):
         self.image = py.transform.rotozoom(self.image, 0, 1.5)
         self.animation()
+
+class Enemy_Horde(py.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.size =(20,20)
+        self.image = py.surface.Surface(self.size)
+        self.image.fill('red')
+        self.rect = self.image.get_rect(center=(10,100))
+        self.shoots_group = py.sprite.Group()
+
+
+
 
 
 

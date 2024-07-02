@@ -4,8 +4,10 @@ import pygame.display
 from sprites import *
 import sys
 from methods import *
-from classes import *
+from shield_class import *
 from menu_class import *
+from EnemyClass import *
+from horde_class import *
 
 
 #Functions that handle collisions of sprite classes
@@ -19,7 +21,7 @@ def player_collision():
         player.sprite.rect.x += side
         return True
 
-    if py.sprite.spritecollide(player.sprite,boss_shoots,True):
+    if py.sprite.spritecollide(player.sprite,boss.get_shoot_group(),True):
         player.sprite.rect.x += side
         return True
 
@@ -65,14 +67,6 @@ def generic_explosion_animation(group1,group2,group3):
                     sprite1.rect.x -= 5
                     py.sprite.spritecollide(sprite1, group2, True)
 
-#Colision between shoots (player x enemy)
-def shoot_shoot_collide():
-    for player_shoot in shoots.sprites():
-        if py.sprite.spritecollide(player_shoot,boss_shoots,False):
-            generic_explosion_animation(shoots,boss_shoots,explosion_animation)
-            player_shoot.kill()
-            return True
-
 
 #Screen
 pygame.init()
@@ -80,7 +74,7 @@ width = 1000
 height = 920
 screen = py.display.set_mode((width, height))
 
-#Sprites Class Call
+#Sprites Class Call // Objects Assignment
 player = py.sprite.GroupSingle()
 player.add(Player())
 asteroids = py.sprite.Group()
@@ -89,18 +83,20 @@ explode = py.sprite.GroupSingle()
 explode.add(Player_Explosion())
 explosion_animation = py.sprite.GroupSingle()
 explosion_animation.add(Asteroid_Explosion())
-boss = py.sprite.GroupSingle()
-boss.add(Boss(player.sprite.rect.x))
+boss = Enemy(screen,player.sprite.rect)
 comets = py.sprite.Group()
-boss_shoots = py.sprite.Group()
 shield_player = ShieldGroup(screen, font, player.sprite)
 menu_screen = Menu(screen,'Space Invaders','Press Space to start')
+horde = EnemyHorde(screen,shoots)
+
+
 
 
 #Game State
 game_state = False
 points = 0
 player_life = 6
+
 
 
 #BG
@@ -113,7 +109,7 @@ clock = py.time.Clock()
 
 #Event for asteroid spawn
 spawn_event = py.USEREVENT + 1
-py.time.set_timer(spawn_event,200)
+py.time.set_timer(spawn_event,100)
 
 
 #Event for boss shoots load
@@ -124,7 +120,6 @@ py.time.set_timer(shoot_event,100)
 #Event for BG comet
 comet_event = py.USEREVENT + 3
 py.time.set_timer(comet_event,4000)
-
 
 
 #Main Game Loop
@@ -144,26 +139,20 @@ while True:
         #Game Running Events
         if game_state:
 
-            #Evento que controla velocidade dos tiros do boss:
-            if event.type == shoot_event and boss.sprite.rect.y >= 200:
-                boss_shoots.add(Boss_Shoots(boss.sprite.rect.center))
-
-            if event.type == py.KEYDOWN:
-                py.mouse.set_visible(False)
+             if event.type == py.KEYDOWN:
+                 py.mouse.set_visible(False)
 
 
-            #Player Shooting
-            if event.type == py.KEYUP:
+#Player Shooting
+             if event.type == py.KEYUP:
                 if event.key == py.K_SPACE:
                     shoots.add(Shoots_left(),Shoots_right())
 
 
-            #Points control
-            if points <= 100:
-                #Asteroid Spawn
-                if event.type == spawn_event:
-                    if randint(0, 2):
-                        asteroids.add(Asteroid(choice(['small', 'big', 'small', 'small'])))
+            #Asteroid Spawn
+            # if event.type == spawn_event:
+            #     if randint(0, 2):
+            #         asteroids.add(Asteroid(choice(['small', 'big', 'small', 'small'])))
 
 
         #Game not running
@@ -172,10 +161,10 @@ while True:
             if event.type == py.KEYDOWN:
                 if event.key == py.K_SPACE:
                     player_life = 6
-                    points = 0
+                    points = 500
                     asteroids.empty()
-                    boss.sprite.rect.y = -100
-                    boss_shoots.empty()
+                    boss.set_initial_pos()
+                    boss.clear_shoots()
                     player_shield_initial_time = 6
                     py.time.set_timer(comet_event, 5000)
                     menu_screen.frame_count = 0
@@ -198,8 +187,9 @@ while True:
         shoots.update()
         asteroid_killing()
         colision = player_collision()
-        shoot_collide = shoot_shoot_collide()
-        life_bar(player_life,screen)
+        boss.update(shoots)
+        horde.update()
+        horde_alive = horde.horde_end()
 
 
 
@@ -211,23 +201,16 @@ while True:
 
             #Show the shield if time > 0:
             if player_shield_initial_time > 0:
-                shield_player.get_time_engine()
-                shield_player.get_shield_pos()
-                shield_player.get_colision(asteroids)
-                shield_player.get_colision(boss_shoots)
-                shield_player.get_sprite_group().draw(screen)
+                shield_player.update(asteroids,player_shield_initial_time,boss.get_shoot_group())
 
 
         #Marca entrada do Boss na tela:
-        if points >= 100:
-            boss.draw(screen)
-            boss.update()
+        if points >= 500 and not horde_alive:
+            boss.enemy_spawn()
 
-        #Marca quando Boss comeca a atirar:
-        if boss.sprite.rect.y >= 200:
-            #positionhandler(player.sprite.rect.x, boss.sprite.rect.x)
-            boss_shoots.draw(screen)
-            boss_shoots.update()
+
+
+
 
         #Player Colision Explosion Sprite
         if colision:
@@ -235,18 +218,25 @@ while True:
             generic_explosion_animation(player,asteroids,explosion_animation)
 
         if player_life == 0:
+            shoots.empty()
+            asteroids.empty()
+
+
             game_state = False
 
         display_points(screen,points)
+        life_bar(player_life, screen, 'center')
 
 
     else:
+        #Start Menu
         screen.blit(background,(0,0))
         comets.draw(screen)
         comets.update()
         menu_screen.show_text()
         menu_screen.move_text()
         menu_screen.show_subtext()
+
 
 
     clock.tick(60)

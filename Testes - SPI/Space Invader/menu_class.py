@@ -1,7 +1,8 @@
 import pygame
 
+
 class Menu():
-    def __init__(self,screen,main_text,subtext):
+    def __init__(self, screen, main_text, subtext):
         #Main Atributes
         self.screen = screen
         self.font1 = pygame.font.Font('Images/Font/slkscr.ttf',80)
@@ -18,6 +19,8 @@ class Menu():
         self.text2_color = [self.color,'black']
         self.frame_count = 0
         self.speed = 3
+
+
 
     def show_text(self):
         self.screen.blit(self.image,self.rect)
@@ -37,10 +40,12 @@ class Menu():
         self.rect2 = self.image2.get_rect(center=(500, self.rect.centery + 200))
 
 
+
     def show_subtext(self):
         if self.frame_count >=150:
             self.subtext_blink()
             self.screen.blit(self.image2,self.rect2)
+
 
 
 
