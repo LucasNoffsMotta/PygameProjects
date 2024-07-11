@@ -14,6 +14,8 @@ red = Being(screen,(10,10),'red',(200,200),6)
 blue = Being(screen,(10,10),'blue',(400,400),5)
 
 
+
+
 while True:
     screen.fill('black')
     red.update()
