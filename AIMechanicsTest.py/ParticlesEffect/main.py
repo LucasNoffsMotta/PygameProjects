@@ -32,7 +32,7 @@ def main_loop():
 
         
 
-        dt = clock.tick() / 1000
+        dt = clock.tick(60) / 1000
 
     
         
