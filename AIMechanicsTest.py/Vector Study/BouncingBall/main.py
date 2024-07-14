@@ -55,15 +55,20 @@ def main():
 
         for event in py.event.get():
 
+
             if event.type == py.QUIT:
                 py.quit()
                 exit()
 
             if event.type == py.MOUSEBUTTONDOWN:
-                rect1.center = (400,0)
+                mouse_pos = py.mouse.get_pos()
+                print(mouse_pos)
+                rect1.center = (mouse_pos)
                 rect2.center = (100,200)
+                gravity1[1] = 1
+                gravity2[1] = 1
 
-
+        
         move()
         gravity_aceleration()
 
