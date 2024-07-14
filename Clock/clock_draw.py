@@ -9,11 +9,6 @@ P_widith = screen_widith // 2
 p_height = screen_height // 2
 radius = p_height - 50
 
-#Dictionaries with angle instructions
-# # clock12 = dict(zip(range(12), range(0,360,30)))
-# clock60 = dict(zip(range(60), range(0,360,6)))
-
-
 
 #Current time
 t = datetime.now()
@@ -25,8 +20,6 @@ def get_clock_pos(clock_dict, clock_hand,key):
     x = P_widith + radius_dict[key] *math.cos(math.radians(clock_dict[clock_hand])) - math.pi / 2
     y = p_height + radius_dict[key] *math.sin(math.radians(clock_dict[clock_hand])) - math.pi / 2
     return x,y
-
-
 
 
 class NiceClock():
@@ -45,6 +38,7 @@ class NiceClock():
         self.screen = screen
         self.pos = pos
         
+        
 
     def circle_draw(self,color,center,radius):
         py.draw.circle(self.screen,color,(center),radius,5)
@@ -53,23 +47,20 @@ class NiceClock():
     
     def pointer_draw(self,sec_color,min_color,h_color):
         # clock12 = dict(zip(range(12), range(0,360,30)))
-        clock60 = dict(zip(range(60), range(0,360,6)))
+        clock60 = dict(zip(range(60), range(0, 360, 6)))
         t = datetime.now()
-        hours, minutes, seconds = ((t.hour % 12) * 5 + t.minute // 12) % 60, t.minute, t.second
+        hours, minutes, seconds = (((t.hour % 12) * 5 + t.minute // 12) ) % 60, t.minute, t.second
         
         #Digits
         for digit , pos in clock60.items():
             radius = 20 if not digit % 3 and not digit % 5 else 8 if not digit % 5 else 2
             py.draw.circle(self.screen,'gainsboro',get_clock_pos(clock60,digit,'digit'),radius,7)
 
-
-        
-        seconds_pos = get_clock_pos(clock60,seconds,'sec')
-        minutes_pos = get_clock_pos(clock60,minutes,'min')
-        hour_pos = get_clock_pos(clock60,hours,'hour')
-        py.draw.line(self.screen,sec_color,(P_widith,p_height),(seconds_pos),4)
-        py.draw.line(self.screen,min_color,(P_widith,p_height),(minutes_pos),7)
-        py.draw.line(self.screen,h_color,(P_widith,p_height),(hour_pos),10)
+        py.draw.line(self.screen,h_color,(P_widith,p_height),get_clock_pos(clock60,hours,'hour'),10)
+        py.draw.line(self.screen,min_color,(P_widith,p_height),get_clock_pos(clock60,minutes,'min'),7)
+        py.draw.line(self.screen,sec_color,(P_widith,p_height),get_clock_pos(clock60,seconds,'sec'),4)
+        print(P_widith,p_height)
+    
 
 
 
