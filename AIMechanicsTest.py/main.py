@@ -10,29 +10,31 @@ height = 600
 clock = py.time.Clock()
 
 screen = py.display.set_mode((width,height))
-vector1 = py.math.Vector2(200,200)
-vector2 = py.math.Vector2(400,400)
-red = Being(screen,(10,10),'red',vector1,6)
-blue = Being(screen,(10,10),'blue',vector2,5)
-
-
-
+blue_pos = (400,400)
+blue = Being(screen,(10,10),'blue',(blue_pos),5)
+target_rect = blue.get_rect()
 
 
 while True:
     screen.fill('black')
+    mouse_pos = py.mouse.get_pos()
+    mouse_surf = py.surface.Surface((2,2))
+    mouse_rect = mouse_surf.get_rect(center=mouse_pos)
     blue.update()
-    red.update(blue.get_vector())
-    # blue.get_move(red.get_rect())
-    # red.get_escape(blue.get_rect())
+
 
 
     for event in py.event.get():
         if event.type == py.QUIT:
             py.quit()
             exit()
+        
+        if event.type == py.MOUSEBUTTONDOWN:
+            target_rect = mouse_rect
     
+    blue.get_move(target_rect)
 
+    
     py.display.update()
     clock.tick(60)
 
