@@ -2,10 +2,8 @@ import pygame as py
 from sys import exit
 from random import randint
 
-
 width = 800
 height = 600
-
 
 screen = py.display.set_mode((width,height))
 
@@ -56,7 +54,6 @@ def main():
         py.display.update()
 
         
-
 
 if __name__ == '__main__':
     py.init()
