@@ -1,0 +1,29 @@
+import pygame as py
+import sys
+
+SCREEN_WIDITH = 800
+SCREEN_HEIGHT = 600
+
+def main():
+    screen = py.display.set_mode((SCREEN_WIDITH,SCREEN_HEIGHT))
+    clock = py.time.Clock()
+    
+
+    while True:
+
+        screen.fill('black')
+
+        for event in py.event.get():
+            if event.type == py.QUIT:
+                py.quit()
+                sys.exit
+        
+        py.display.update()
+        clock.tick(60)
+
+
+
+if __name__ == '__main__':
+    py.init()
+    main()
+
