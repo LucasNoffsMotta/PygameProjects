@@ -117,13 +117,6 @@ def main():
          screen.blit(surf,(100,750))
 
 
-
-
-    
-    
-
-
-
     while True:
         mouse_pos = py.mouse.get_pos()
         screen.fill('black')
@@ -196,8 +189,10 @@ def main():
                 if event.key == py.K_BACKSPACE:
                          chosen_letters_pos[0] -= space_x
                          writting_rect.centerx -= space_x
+
                          if chosen_letters_pos[0] <= 300:
                             chosen_letters_pos[0] = 300
+
                          if writting_rect.centerx <= 300:
                             writting_rect.centerx = 285
                 
