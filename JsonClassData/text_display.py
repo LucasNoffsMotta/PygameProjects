@@ -18,8 +18,7 @@ class TextObject:
         self.pos = pos
         self.color = color
         
-
-        self.text_surf = self.font.render(text,True,self.color)
+        self.text_surf = self.font.render(f'{self.text}',True,self.color)
         self.text_rect = self.text_surf.get_rect(center=(pos))
 
     
@@ -38,4 +37,35 @@ class TextObject:
         
     def __str__(self):
         return self.text
+    
+    def __add__(self,other):
+        return self.text + other.text
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   
