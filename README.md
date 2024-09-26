@@ -5,5 +5,5 @@ AIMechanicsTest:
 
    . ParticlesEffect: Small script that generates a particle effect based on a mouse click on the screen:
 
-  ![GIFMaker_me (1)](https://github.com/user-attachments/assets/2a8b5e94-37ab-4755-be49-91ba69271b0f)
+   ![GIFMaker_me](https://github.com/user-attachments/assets/2131a91b-39d3-4018-89e9-bf32658e83ef)
 
