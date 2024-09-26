@@ -18,8 +18,10 @@ AIMechanicsTest:
   
    ![GIFMaker_me (4)](https://github.com/user-attachments/assets/3dcf77c3-33ed-4bff-bee3-91cbfed67ee2)
 
-  . SpriteCreator: A small "pseudo engine" capable of load and animate images. It receives as arguments the specifications of the animation, draw it and animate it with these simple calls:
-  ![image](https://github.com/user-attachments/assets/c134a11b-281d-48e4-8d04-4ad0ad9e8c72)
+  . SpriteCreator: A small "pseudo engine" capable of load and animate images. It receives as arguments the specifications of the animation, as the list of the surfaces and speed of animation, for example, and then draw it and animate it with these simple instantiations and calls:
+  
+  ![image](https://github.com/user-attachments/assets/82a766ca-3a59-4000-adbd-15903c28e1be)
+
 
    Output:
    ![GIFMaker_me (5)](https://github.com/user-attachments/assets/48355845-6637-40a9-b0ea-2cea681d0880)
