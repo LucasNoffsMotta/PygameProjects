@@ -4,5 +4,4 @@ AIMechanicsTest:
 - This file contains a few scripts with different features, as follows:
 
    . ParticlesEffect: Small script that generates a particle effect based on a mouse click on the screen.   
-       
-   ![Design sem nome](https://github.com/user-attachments/assets/5742efa6-a8a8-46b0-af3e-a2a88ee96534)
+    ![GIFMaker_me](https://github.com/user-attachments/assets/3dcf51a9-12c4-47a4-952d-4d2b0be9eca2)
