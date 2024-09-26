@@ -22,6 +22,6 @@ AIMechanicsTest:
   
   ![image](https://github.com/user-attachments/assets/82a766ca-3a59-4000-adbd-15903c28e1be)
 
-
    Output:
+  
    ![GIFMaker_me (5)](https://github.com/user-attachments/assets/48355845-6637-40a9-b0ea-2cea681d0880)
