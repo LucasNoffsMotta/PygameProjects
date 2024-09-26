@@ -5,5 +5,9 @@ AIMechanicsTest:
 
    . ParticlesEffect: Small script that generates a particle effect based on a mouse click on the screen:
 
-   ![GIFMaker_me](https://github.com/user-attachments/assets/2131a91b-39d3-4018-89e9-bf32658e83ef)
+    ![GIFMaker_me](https://github.com/user-attachments/assets/2131a91b-39d3-4018-89e9-bf32658e83ef)
 
+  . VectorStudy: A few scripts that move objects on the screen.
+  
+   BouncingBall
+   ![GIFMaker_me (2)](https://github.com/user-attachments/assets/7e1169ac-b70e-44c9-a2f9-896f5b1e3d77)
