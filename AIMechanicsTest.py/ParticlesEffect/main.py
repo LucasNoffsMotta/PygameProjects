@@ -23,9 +23,9 @@ def main_loop():
                 for n in range (1000):
                     pos = pygame.mouse.get_pos()
                     color = choice(('red','orange','yellow'))
-                    direction = pygame.math.Vector2(uniform(1,0),uniform(1,0))
+                    direction = pygame.math.Vector2(uniform(-1, 1),uniform(-1, 1))
                     direction = direction.normalize()
-                    speed = randint(50,400)
+                    speed = randint(50, 400)
                     particle_group.add(Particle(particle_group,pos,color,direction,speed))
                 
         
