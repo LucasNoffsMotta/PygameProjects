@@ -13,3 +13,8 @@ AIMechanicsTest:
    BouncingBall
   
    ![GIFMaker_me (3)](https://github.com/user-attachments/assets/d6faabfb-d558-4b43-8d04-729ab0547740)
+
+  . Clock: A simulated analogic clock using only the native pygame draw calls, date time libary and math:
+  
+   ![GIFMaker_me (4)](https://github.com/user-attachments/assets/3dcf77c3-33ed-4bff-bee3-91cbfed67ee2)
+
