@@ -3,5 +3,6 @@ This repository contains a few small projects / scripts made for educational pur
 AIMechanicsTest:
 - This file contains a few scripts with different features, as follows:
 
-   . ParticlesEffect: Small script that generates a particle effect based on a mouse click on the screen.   
-    ![GIFMaker_me](https://github.com/user-attachments/assets/3dcf51a9-12c4-47a4-952d-4d2b0be9eca2)
+   . ParticlesEffect: Small script that generates a particle effect based on a mouse click on the screen:
+  
+  ![GIFMaker_me](https://github.com/user-attachments/assets/ca2d9a5d-5e68-4d9e-acbf-abe0292fa628)
